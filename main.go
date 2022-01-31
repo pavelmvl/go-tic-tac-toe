@@ -1,39 +1,11 @@
 package main
 
 import (
-	"flag"
 	"fmt"
+	"go-tic-tac-toe/internal/pkg/initPlayer"
 )
 
-type Player struct {
-	Priority int
-	Mark     rune
-}
-
-func (this Player) String() string {
-	return fmt.Sprintf("Player %d marking '%c'", this.Priority, this.Mark)
-}
-
-func Init() Player {
-	var player Player
-	p := flag.String("p", "", "Setup player mark. Default is 'x'")
-	flag.Parse()
-	if *p == "" {
-		fmt.Print("Enter your mark: ")
-		fmt.Scan(p)
-	}
-	switch *p {
-	case "x", "X":
-		player.Priority = 0
-		player.Mark = 'X'
-	default:
-		player.Priority = 1
-		player.Mark = 'O'
-	}
-	return player
-}
-
 func main() {
-	Player := Init()
-	fmt.Println(Player)
+	player := initPlayer.InitPlayer()
+	fmt.Println(player)
 }
