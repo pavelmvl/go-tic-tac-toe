@@ -2,6 +2,6 @@ module go-tic-tac-toe
 
 go 1.17
 
-replace go-tic-tac-toe/internal/pkg/initPlayer v0.0.0 => ./internal/pkg/initPlayer
+replace go-tic-tac-toe/internal/initPlayer v0.0.0 => ./internal/initPlayer
 
-require go-tic-tac-toe/internal/pkg/initPlayer v0.0.0
+require go-tic-tac-toe/internal/initPlayer v0.0.0

@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"go-tic-tac-toe/internal/pkg/initPlayer"
+	"go-tic-tac-toe/internal/initPlayer"
 )
 
 func main() {
