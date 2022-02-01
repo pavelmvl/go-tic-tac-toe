@@ -1,4 +1,4 @@
-package initPlayer
+package player
 
 import (
 	"fmt"

@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	"go-tic-tac-toe/internal/initPlayer"
+	"go-tic-tac-toe/internal/player"
 )
 
 func main() {
@@ -13,6 +13,6 @@ func main() {
 		fmt.Print("Enter your mark: ")
 		fmt.Scan(p)
 	}
-	player := initPlayer.New(*p)
+	player := player.New(*p)
 	fmt.Println(player)
 }
