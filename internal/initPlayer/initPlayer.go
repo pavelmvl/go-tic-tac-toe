@@ -1,7 +1,6 @@
 package initPlayer
 
 import (
-	"flag"
 	"fmt"
 )
 
@@ -14,15 +13,9 @@ func (this Player) String() string {
 	return fmt.Sprintf("Player %d marking '%c'", this.Priority, this.Mark)
 }
 
-func InitPlayer() Player {
+func New(mark string) Player {
 	var player Player
-	p := flag.String("p", "", "Setup player mark. Default is 'x'")
-	flag.Parse()
-	if *p == "" {
-		fmt.Print("Enter your mark: ")
-		fmt.Scan(p)
-	}
-	switch *p {
+	switch mark {
 	case "x", "X":
 		player.Priority = 0
 		player.Mark = 'X'
