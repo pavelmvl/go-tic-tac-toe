@@ -22,9 +22,9 @@ func New(cols, rows int) (Field, error) {
 	return Field{}, fmt.Errorf("Incorrect cols=%d or rows=%d value", cols, rows)
 }
 
-//func (f Field) String() string {
-//	return fmt.Sprintf("Field content %d columns, %d rows", f.Cols, f.Rows)
-//}
+func (f Field) String() string {
+	return fmt.Sprintf("Field content %d columns, %d rows, Players: %v", f.Cols, f.Rows, f.Players)
+}
 
 func (f Field) Check(col, row int) error {
 	// fmt.Printf("check col:%d, row:%d\n", col, row)
