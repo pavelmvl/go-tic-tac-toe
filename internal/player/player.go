@@ -10,7 +10,7 @@ type Player struct {
 }
 
 func (this Player) String() string {
-	return fmt.Sprintf("Player %d marking '%c'", this.Priority, this.Mark)
+	return fmt.Sprintf("'Player %d marking '%c''", this.Priority, this.Mark)
 }
 
 func New(mark string) Player {
