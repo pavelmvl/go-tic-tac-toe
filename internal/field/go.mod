@@ -1,7 +1,3 @@
-module go-tic-tac-toe/internal/field
+module field
 
 go 1.17
-
-replace go-tic-tac-toe/internal/player v0.0.0 => ../player
-
-require go-tic-tac-toe/internal/player v0.0.0
