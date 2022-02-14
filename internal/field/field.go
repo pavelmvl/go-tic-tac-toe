@@ -38,3 +38,8 @@ func (f Field) IsCellFree(col, row int) error {
 	}
 	return nil
 }
+
+func (f *Field) AssignCell(col, row int, mark rune) error {
+	f.cells[col][row] = mark
+	return nil
+}
