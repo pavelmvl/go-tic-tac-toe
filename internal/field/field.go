@@ -43,3 +43,7 @@ func (f *Field) AssignCell(col, row int, mark rune) error {
 	f.cells[col][row] = mark
 	return nil
 }
+
+func (f Field) GetCellValue(col, row int) rune {
+	return f.cells[col][row]
+}
