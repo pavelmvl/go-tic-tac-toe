@@ -5,16 +5,21 @@ import (
 )
 
 type Field struct {
-	size int
+	size  int
+	cells [][]rune
 }
 
 func New(size int) (Field, error) {
-	if size > 2 {
-		return Field{
-			size: size,
-		}, nil
+	f := Field{}
+	if size < 3 {
+		return f, fmt.Errorf("Incorrect 'size' value (%d). 'size' should be greater than '2'", size)
 	}
-	return Field{}, fmt.Errorf("Incorrect 'size' value (%d). 'size' should be greater than '2'", size)
+	f.size = size
+	f.cells = make([][]rune, size)
+	for i := range f.cells {
+		f.cells[i] = make([]rune, size)
+	}
+	return f, nil
 }
 
 func (f Field) IsCellValid(col, row int) error {
