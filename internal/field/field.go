@@ -48,6 +48,27 @@ func (f Field) GetCellValue(col, row int) rune {
 	return f.cells[col][row]
 }
 
+func (f Field) IsCellWinner(col, row int) rune {
+	var win rune
+	win = f.IsColumnWinner(col, row)
+	if win != NoWinner {
+		return win
+	}
+	win = f.IsRowWinner(col, row)
+	if win != NoWinner {
+		return win
+	}
+	win = f.IsDiagStreightWinner(col, row)
+	if win != NoWinner {
+		return win
+	}
+	win = f.IsDiagReverseWinner(col, row)
+	if win != NoWinner {
+		return win
+	}
+	return NoWinner
+}
+
 func (f Field) IsFieldFull() bool {
 	for col := 0; col < f.size; col++ {
 		for row := 0; row < f.size; row++ {
