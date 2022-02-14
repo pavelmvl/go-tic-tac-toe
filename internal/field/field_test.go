@@ -70,3 +70,14 @@ func TestIsCellValidDefault(t *testing.T) {
 		t.Fatal("field.IsCellValid(3, 3) should be fail")
 	}
 }
+
+func TestIsCellFree(t *testing.T) {
+	f, _ := New(3)
+	f.AssignCell(0, 0, 'X')
+	if f.IsCellFree(0, 0) == nil {
+		t.Fatal("\n", f.ToString(), "f.IsCellFree(0,0) should be full")
+	}
+	if f.IsCellFree(1, 1) != nil {
+		t.Fatal("\n", f.ToString(), "f.IsCellFree(1,1) should be empty")
+	}
+}
