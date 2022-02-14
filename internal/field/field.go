@@ -31,3 +31,10 @@ func (f Field) IsCellValid(col, row int) error {
 	}
 	return nil
 }
+
+func (f Field) IsCellFree(col, row int) error {
+	if f.cells[col][row] != rune(0) {
+		return fmt.Errorf("Cell is not free (%c)", f.cells[col][row])
+	}
+	return nil
+}
