@@ -9,8 +9,8 @@ type Player struct {
 	Mark     rune
 }
 
-func (this Player) String() string {
-	return fmt.Sprintf("'Player %d marking '%c''", this.Priority, this.Mark)
+func (p Player) String() string {
+	return fmt.Sprintf("'Player %d marking '%c''", p.Priority, p.Mark)
 }
 
 func New(mark string) Player {
