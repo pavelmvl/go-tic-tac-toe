@@ -29,7 +29,7 @@ func New(size int) (Field, error) {
 	return f, nil
 }
 
-func (f Field) IsCellValid(col, row int) error {
+func (f Field) isCellValid(col, row int) error {
 	if col < 0 || col >= f.size {
 		return ErrCellColumn
 	}
@@ -39,7 +39,7 @@ func (f Field) IsCellValid(col, row int) error {
 	return nil
 }
 
-func (f Field) IsCellFree(col, row int) error {
+func (f Field) isCellFree(col, row int) error {
 	if f.cells[col][row] != rune(0) {
 		return ErrCellBusy
 	}
@@ -47,29 +47,47 @@ func (f Field) IsCellFree(col, row int) error {
 }
 
 func (f *Field) AssignCell(col, row int, mark rune) error {
+	var err error
+	err = f.isCellValid(col, row)
+	if err != nil {
+		return err
+	}
+	err = f.isCellFree(col, row)
+	if err != nil {
+		return err
+	}
 	f.cells[col][row] = mark
 	return nil
 }
 
-func (f Field) GetCellValue(col, row int) rune {
-	return f.cells[col][row]
+func (f Field) GetCellValue(col, row int) (rune, error) {
+	var err error
+	err = f.isCellValid(col, row)
+	if err != nil {
+		return 0, err
+	}
+	return f.cells[col][row], nil
 }
 
 func (f Field) IsCellWinner(col, row int) rune {
+	return f.isCellWinner(col, row)
+}
+
+func (f Field) isCellWinner(col, row int) rune {
 	var win rune
-	win = f.IsColumnWinner(col, row)
+	win = f.isColumnWinner(col, row)
 	if win != NoWinner {
 		return win
 	}
-	win = f.IsRowWinner(col, row)
+	win = f.isRowWinner(col, row)
 	if win != NoWinner {
 		return win
 	}
-	win = f.IsDiagStreightWinner(col, row)
+	win = f.isDiagStreightWinner(col, row)
 	if win != NoWinner {
 		return win
 	}
-	win = f.IsDiagReverseWinner(col, row)
+	win = f.isDiagReverseWinner(col, row)
 	if win != NoWinner {
 		return win
 	}
@@ -79,7 +97,7 @@ func (f Field) IsCellWinner(col, row int) rune {
 func (f Field) IsFieldFull() bool {
 	for col := 0; col < f.size; col++ {
 		for row := 0; row < f.size; row++ {
-			if f.GetCellValue(col, row) == NoWinner {
+			if winner, _ := f.GetCellValue(col, row); winner == NoWinner {
 				return false
 			}
 		}
@@ -92,7 +110,7 @@ func (f Field) ToString() string {
 	for row := 0; row < f.size; row++ {
 		buf = append(buf, []byte(" ")...)
 		for col := 0; col < f.size; col++ {
-			mark := f.GetCellValue(col, row)
+			mark, _ := f.GetCellValue(col, row)
 			if mark == NoWinner {
 				mark = ' '
 			}

@@ -2,14 +2,14 @@ package field
 
 const NoWinner rune = rune(0)
 
-func (f Field) IsColumnWinner(col, row int) rune {
-	winner := f.GetCellValue(col, row)
+func (f Field) isColumnWinner(col, row int) rune {
+	winner, _ := f.GetCellValue(col, row)
 	if winner == rune(0) {
 		return NoWinner
 	}
 	lineSize := 0
 	for v := 0; v < f.size; v++ {
-		if f.GetCellValue(col, v) == winner {
+		if w, _ := f.GetCellValue(col, v); w == winner {
 			lineSize++
 		} else {
 			lineSize = 0
@@ -21,14 +21,14 @@ func (f Field) IsColumnWinner(col, row int) rune {
 	return NoWinner
 }
 
-func (f Field) IsRowWinner(col, row int) rune {
-	winner := f.GetCellValue(col, row)
+func (f Field) isRowWinner(col, row int) rune {
+	winner, _ := f.GetCellValue(col, row)
 	if winner == rune(0) {
 		return NoWinner
 	}
 	lineSize := 0
 	for v := 0; v < f.size; v++ {
-		if f.GetCellValue(v, row) == winner {
+		if w, _ := f.GetCellValue(v, row); w == winner {
 			lineSize++
 		} else {
 			lineSize = 0
@@ -40,8 +40,8 @@ func (f Field) IsRowWinner(col, row int) rune {
 	return NoWinner
 }
 
-func (f Field) IsDiagStreightWinner(col, row int) rune {
-	winner := f.GetCellValue(col, row)
+func (f Field) isDiagStreightWinner(col, row int) rune {
+	winner, _ := f.GetCellValue(col, row)
 	if winner == rune(0) {
 		return NoWinner
 	}
@@ -55,7 +55,7 @@ func (f Field) IsDiagStreightWinner(col, row int) rune {
 	curCol := col - sub
 	curRow := row - sub
 	for curCol < f.size && curRow < f.size {
-		if f.GetCellValue(curCol, curRow) == winner {
+		if w, _ := f.GetCellValue(curCol, curRow); w == winner {
 			lineSize++
 		} else {
 			lineSize = 0
@@ -69,8 +69,8 @@ func (f Field) IsDiagStreightWinner(col, row int) rune {
 	return NoWinner
 }
 
-func (f Field) IsDiagReverseWinner(col, row int) rune {
-	winner := f.GetCellValue(col, row)
+func (f Field) isDiagReverseWinner(col, row int) rune {
+	winner, _ := f.GetCellValue(col, row)
 	if winner == rune(0) {
 		return NoWinner
 	}
@@ -87,7 +87,7 @@ func (f Field) IsDiagReverseWinner(col, row int) rune {
 		curRow += add
 	}
 	for curCol < f.size && curRow >= 0 {
-		if f.GetCellValue(curCol, curRow) == winner {
+		if w, _ := f.GetCellValue(curCol, curRow); w == winner {
 			lineSize++
 		} else {
 			lineSize = 0

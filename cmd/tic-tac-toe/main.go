@@ -37,13 +37,8 @@ func main() {
 			for {
 				fmt.Print("(", iter, ")(", string(p.Mark), ")Enter <column> <row>: ")
 				fmt.Scan(&col, &row)
-				err := instField.IsCellValid(col, row)
-				if err != nil {
-					fmt.Println(err)
-					fmt.Println("Try enter againg")
-					continue
-				}
-				err = instField.IsCellFree(col, row)
+				// mark cell
+				err := instField.AssignCell(col, row, p.Mark)
 				if err != nil {
 					fmt.Println(err)
 					fmt.Println("Try enter againg")
@@ -51,8 +46,6 @@ func main() {
 				}
 				break
 			}
-			// mark cell
-			instField.AssignCell(col, row, p.Mark)
 			// print current field
 			instField.Print()
 			// check winners
