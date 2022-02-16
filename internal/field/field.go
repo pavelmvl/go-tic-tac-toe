@@ -9,10 +9,17 @@ type Field struct {
 	cells [][]rune
 }
 
+var (
+	ErrFieldSize  = fmt.Errorf("Incorrect 'size' value. 'size' should be greater than '2'")
+	ErrCellColumn = fmt.Errorf("Incorrect cell: column check failed")
+	ErrCellRow    = fmt.Errorf("Incorrect cell: row check failed")
+	ErrCellBusy   = fmt.Errorf("Cell is not free")
+)
+
 func New(size int) (Field, error) {
 	f := Field{}
 	if size < 3 {
-		return f, fmt.Errorf("Incorrect 'size' value (%d). 'size' should be greater than '2'", size)
+		return f, ErrFieldSize
 	}
 	f.size = size
 	f.cells = make([][]rune, size)
@@ -24,17 +31,17 @@ func New(size int) (Field, error) {
 
 func (f Field) IsCellValid(col, row int) error {
 	if col < 0 || col >= f.size {
-		return fmt.Errorf("Incorrect cell: column check failed")
+		return ErrCellColumn
 	}
 	if row < 0 || row >= f.size {
-		return fmt.Errorf("Incorrect cell: row check failed")
+		return ErrCellRow
 	}
 	return nil
 }
 
 func (f Field) IsCellFree(col, row int) error {
 	if f.cells[col][row] != rune(0) {
-		return fmt.Errorf("Cell is not free (%c)", f.cells[col][row])
+		return ErrCellBusy
 	}
 	return nil
 }
