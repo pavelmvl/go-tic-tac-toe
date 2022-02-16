@@ -28,56 +28,33 @@ func TestNew(t *testing.T) {
 	}
 }
 
-func TestIsCellValidDefault(t *testing.T) {
+type cellData struct {
+	col  int
+	row  int
+	mark rune
+	err  error
+}
+
+var cellDataTest = [...]cellData{
+	cellData{-1, -1, 'X', ErrCellColumn},
+	cellData{-1, 0, 'X', ErrCellColumn},
+	cellData{0, -1, 'X', ErrCellRow},
+	cellData{0, 0, 'X', nil},
+	cellData{0, 0, 'O', ErrCellBusy},
+	cellData{1, 1, 0, nil},
+	cellData{99, 99, 'X', ErrCellColumn},
+}
+
+func TestAssignCell(t *testing.T) {
 	f, e := New(3)
 	if e != nil {
 		t.Fatal("field.New(3) return error: ", e)
 	}
-	e = f.IsCellValid(-1, -1)
-	if e == nil {
-		t.Fatal("field.IsCellValid(-1, -1) should be fail")
-	}
-	e = f.IsCellValid(-1, 0)
-	if e == nil {
-		t.Fatal("field.IsCellValid(-1, 0) should be fail")
-	}
-	e = f.IsCellValid(0, -1)
-	if e == nil {
-		t.Fatal("field.IsCellValid(0, -1) should be fail")
-	}
-	e = f.IsCellValid(0, 0)
-	if e != nil {
-		t.Fatal("field.IsCellValid(0, 0) return error: ", e)
-	}
-	e = f.IsCellValid(1, 1)
-	if e != nil {
-		t.Fatal("field.IsCellValid(1, 1) return error: ", e)
-	}
-	e = f.IsCellValid(2, 2)
-	if e != nil {
-		t.Fatal("field.IsCellValid(2, 2) return error: ", e)
-	}
-	e = f.IsCellValid(3, 2)
-	if e == nil {
-		t.Fatal("field.IsCellValid(3, 2) should be fail")
-	}
-	e = f.IsCellValid(2, 3)
-	if e == nil {
-		t.Fatal("field.IsCellValid(2, 3) should be fail")
-	}
-	e = f.IsCellValid(3, 3)
-	if e == nil {
-		t.Fatal("field.IsCellValid(3, 3) should be fail")
-	}
-}
-
-func TestIsCellFree(t *testing.T) {
-	f, _ := New(3)
-	f.AssignCell(0, 0, 'X')
-	if f.IsCellFree(0, 0) == nil {
-		t.Fatal("\n", f.ToString(), "f.IsCellFree(0,0) should be full")
-	}
-	if f.IsCellFree(1, 1) != nil {
-		t.Fatal("\n", f.ToString(), "f.IsCellFree(1,1) should be empty")
+	for _, v := range cellDataTest {
+		if err := f.AssignCell(v.col, v.row, v.mark); err != v.err {
+			t.Fatal("Unexpected result: ", err, "\n",
+				"Should be: ", v.err, "\n",
+				"Test data: ", v)
+		}
 	}
 }
