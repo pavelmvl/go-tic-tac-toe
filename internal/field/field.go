@@ -140,7 +140,7 @@ func (f Field) ToHtml() string {
 	for row := 0; row < f.size; row++ {
 		html = append(html, []byte("<div class=\"row\">")...)
 		for col := 0; col < f.size; col++ {
-			mark := f.GetCellValue(col, row)
+			mark, _ := f.GetCellValue(col, row)
 			if mark == NoWinner {
 				mark = ' '
 			}
