@@ -143,7 +143,7 @@ func (f Field) ToHtml() string {
 			if mark == NoWinner {
 				mark = ' '
 			}
-			html = append(html, []byte(fmt.Sprintf("<div class=\"cell\">%c</div>", mark))...)
+			html = append(html, []byte(fmt.Sprintf("<div class=\"cell\" onclick=\"location.href='/%d/%d';\">%c</div>", col, row, mark))...)
 		}
 		html = append(html, []byte("</div>")...)
 	}
