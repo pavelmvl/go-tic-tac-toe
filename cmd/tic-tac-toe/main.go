@@ -35,10 +35,10 @@ func main() {
 		for _, p := range players {
 			// Enter and validate cell coord
 			for {
-				fmt.Print("(", iter, ")(", string(p.Mark), ")Enter <column> <row>: ")
+				fmt.Print("(", iter, ")(", string(p.GetMark()), ")Enter <column> <row>: ")
 				fmt.Scan(&col, &row)
 				// mark cell
-				err := instField.AssignCell(col, row, p.Mark)
+				err := instField.AssignCell(col, row, p.GetMark())
 				if err != nil {
 					fmt.Println(err)
 					fmt.Println("Try enter againg")
