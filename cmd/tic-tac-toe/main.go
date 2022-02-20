@@ -4,17 +4,22 @@ import (
 	"flag"
 	"fmt"
 	"go-tic-tac-toe/internal/field"
+	"go-tic-tac-toe/internal/httpServer"
 	"go-tic-tac-toe/internal/player"
+	"os"
+	"os/exec"
+	"runtime"
 )
 
 func main() {
 	// init
 	s := flag.Int("s", 3, "Setup square field size, Default is 3")
 	p := flag.String("p", "", "Setup player mark. Default is empty")
+	http := flag.Bool("h", false, "Setup using http variant of game, default is false")
 	flag.Parse()
-	instField, err := field.New(*s)
-	if err != nil {
-		panic(err)
+	instField, errField := field.New(*s)
+	if errField != nil {
+		panic(errField)
 	}
 	if *p == "" {
 		fmt.Print("Enter your mark: ")
@@ -22,10 +27,20 @@ func main() {
 	}
 	players := make([]player.Player, 0, 2)
 	players = append(players, player.New(*p))
-	if players[0].Mark == 'X' {
+	if players[0].GetMark() == 'X' {
 		players = append(players, player.New("O"))
 	} else {
 		players = append(players, player.New("X"))
+	}
+	if *http {
+		startBrowser("http://127.0.0.1:8080")
+		iplayers := make([]httpServer.IPlayer, 0, cap(players))
+		for _, v := range players {
+			iplayers = append(iplayers, v)
+		}
+		err := httpServer.NewHttpGame(instField, iplayers...)
+		fmt.Println(err)
+		os.Exit(0)
 	}
 	// work
 	var col int
