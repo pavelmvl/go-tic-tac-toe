@@ -123,9 +123,8 @@ func (f Field) ToString() string {
 }
 
 func (f Field) ToHtml() string {
-	html := make([]byte, 2048)
-	html = append(html, []byte(`
-<html>
+	html := make([]byte, 0, 2048)
+	html = append(html, []byte(`<html>
 <head>
 	<title>Tic-tac-toe</title>
 	<style>
