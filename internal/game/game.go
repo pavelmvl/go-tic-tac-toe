@@ -12,6 +12,7 @@ type IField interface {
 	AssignCell(col, row int, mark rune) error
 	IsCellWinner(col, row int) rune
 	IsFieldFull() bool
+	ToString() string
 	ToHtml(...string) string
 }
 
@@ -52,11 +53,11 @@ func (g *Game) NextMove(col, row int) error {
 	}
 	if winner := g.field.IsCellWinner(col, row); winner != 0 {
 		g.winner = currentPlayer
-		return ErrNewWinner
+		return nil
 	}
 	if g.field.IsFieldFull() {
 		g.draw = true
-		return ErrNewWinner
+		return nil
 	}
 	g.playerIdx++
 	if g.playerIdx >= len(g.players) {
@@ -78,4 +79,16 @@ func (g Game) GetWinnerString() (string, error) {
 
 func (g Game) ToHtml(s ...string) string {
 	return g.field.ToHtml(s...)
+}
+
+func (g Game) ToString() string {
+	return g.field.ToString()
+}
+
+func (g Game) GetIter() int {
+	return g.iter
+}
+
+func (g Game) GetCurrentPlayer() IPlayer {
+	return g.players[g.playerIdx]
 }
