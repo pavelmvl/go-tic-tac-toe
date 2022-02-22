@@ -46,7 +46,7 @@ func (f Field) isCellFree(col, row int) error {
 	return nil
 }
 
-func (f *Field) AssignCell(col, row int, mark rune) error {
+func (f Field) AssignCell(col, row int, mark rune) error {
 	var err error
 	err = f.isCellValid(col, row)
 	if err != nil {
