@@ -41,39 +41,28 @@ func main() {
 		os.Exit(0)
 	}
 	// work
-	var col int
-	var row int
-	var iter int = 0
+	var col, row int
 	for {
-		for _, p := range players {
-			// Enter and validate cell coord
-			for {
-				fmt.Print("(", iter, ")(", string(p.GetMark()), ")Enter <column> <row>: ")
-				fmt.Scan(&col, &row)
-				// mark cell
-				err := instField.AssignCell(col, row, p.GetMark())
-				if err != nil {
-					fmt.Println(err)
-					fmt.Println("Try enter againg")
-					continue
-				}
-				break
+		// Enter and validate cell coord
+		for {
+			p := instGame.GetCurrentPlayer()
+			fmt.Print("(", instGame.GetIter(), ")(", string(p.GetMark()), ")Enter <column> <row>: ")
+			fmt.Scan(&col, &row)
+			// mark cell
+			err := instGame.NextMove(col, row)
+			if err != nil {
+				fmt.Println(err)
+				fmt.Println("Try enter againg")
+				continue
 			}
-			// print current field
-			instField.Print()
-			// check winners
-			winner := instField.IsCellWinner(col, row)
-			if winner != field.NoWinner {
-				fmt.Println(string(winner), "is won")
-				return
-			}
-			// check draw
-			if instField.IsFieldFull() == true {
-				fmt.Println("friendship is won")
-				return
-			}
+			break
 		}
-		iter++
+		fmt.Print(instGame.ToString())
+		winnerString, winnerErr := instGame.GetWinnerString()
+		if winnerErr == nil {
+			fmt.Println(winnerString)
+			return
+		}
 	}
 }
 
