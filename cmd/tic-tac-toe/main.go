@@ -4,7 +4,8 @@ import (
 	"flag"
 	"fmt"
 	"go-tic-tac-toe/internal/field"
-	"go-tic-tac-toe/internal/httpServer"
+	"go-tic-tac-toe/internal/game"
+	"go-tic-tac-toe/internal/httpGame"
 	"go-tic-tac-toe/internal/player"
 	"os"
 	"os/exec"
@@ -25,20 +26,17 @@ func main() {
 		fmt.Print("Enter your mark: ")
 		fmt.Scan(p)
 	}
-	players := make([]player.Player, 0, 2)
+	players := make([]game.IPlayer, 0, 2)
 	players = append(players, player.New(*p))
 	if players[0].GetMark() == 'X' {
 		players = append(players, player.New("O"))
 	} else {
 		players = append(players, player.New("X"))
 	}
+	instGame := game.NewGame(instField, players...)
 	if *http {
 		startBrowser("http://127.0.0.1:8080")
-		iplayers := make([]httpServer.IPlayer, 0, cap(players))
-		for _, v := range players {
-			iplayers = append(iplayers, v)
-		}
-		err := httpServer.NewHttpGame(instField, iplayers...)
+		err := httpGame.NewHttpGame(&instGame)
 		fmt.Println(err)
 		os.Exit(0)
 	}
