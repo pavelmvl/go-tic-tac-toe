@@ -53,12 +53,12 @@ func (h HttpGame) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	moveErr := h.game.NextMove(col, row)
 	if moveErr != nil {
-		winnerString, winnerErr := h.game.GetWinnerString()
-		if winnerErr == nil {
-			fmt.Fprint(w, h.game.ToHtml(moveErr.Error(), winnerString))
-			return
-		}
 		fmt.Fprint(w, h.game.ToHtml(moveErr.Error()))
+		return
+	}
+	winnerString, winnerErr := h.game.GetWinnerString()
+	if winnerErr == nil {
+		fmt.Fprint(w, h.game.ToHtml(winnerString))
 		return
 	}
 	fmt.Fprint(w, h.game.ToHtml())
