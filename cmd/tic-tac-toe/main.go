@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"go-tic-tac-toe/internal/cliGame"
 	"go-tic-tac-toe/internal/common"
 	"go-tic-tac-toe/internal/field"
 	"go-tic-tac-toe/internal/game"
@@ -15,17 +16,22 @@ import (
 
 func main() {
 	// init
+	a := flag.Bool("a", false, "Ask config by cli or webUI")
 	s := flag.Int("s", 3, "Setup square field size, Default is 3")
-	p := flag.String("p", "", "Setup player mark. Default is empty")
-	http := flag.Bool("h", false, "Setup using http variant of game, default is false")
+	p := flag.String("p", "X", "Setup player mark. Default is 'X'")
+	v := flag.String("v", "cli", "Setup using http variant of game, default is cli, valid values is 'h'(http) or 'c'(cli)")
 	flag.Parse()
+	if *a {
+		fmt.Print("Enter your field size: ")
+		fmt.Scan(s)
+		fmt.Print("Enter your mark: ")
+		fmt.Scan(p)
+		fmt.Print("Enter game variant: ")
+		fmt.Scan(v)
+	}
 	instField, errField := field.New(*s)
 	if errField != nil {
 		panic(errField)
-	}
-	if *p == "" {
-		fmt.Print("Enter your mark: ")
-		fmt.Scan(p)
 	}
 	players := make([]common.IPlayer, 0, 2)
 	players = append(players, player.New(*p))
@@ -35,35 +41,12 @@ func main() {
 		players = append(players, player.New("X"))
 	}
 	instGame := game.NewGame(instField, players...)
-	if *http {
+	switch *v {
+	case "h", "http":
 		startBrowser("http://127.0.0.1:8080")
-		err := httpGame.NewHttpGame(&instGame)
-		fmt.Println(err)
-		os.Exit(0)
-	}
-	// work
-	var col, row int
-	for {
-		// Enter and validate cell coord
-		for {
-			p := instGame.GetCurrentPlayer()
-			fmt.Print("(", instGame.GetIter(), ")(", string(p.GetMark()), ")Enter <column> <row>: ")
-			fmt.Scan(&col, &row)
-			// mark cell
-			err := instGame.NextMove(col, row)
-			if err != nil {
-				fmt.Println(err)
-				fmt.Println("Try enter againg")
-				continue
-			}
-			break
-		}
-		fmt.Print(instGame.ToString())
-		winnerString, winnerErr := instGame.GetWinnerString()
-		if winnerErr == nil {
-			fmt.Println(winnerString)
-			return
-		}
+		httpGame.NewHttpGame(&instGame)
+	default:
+		cliGame.PlayCliGame(&instGame, os.Stdin, os.Stdout, os.Stderr)
 	}
 }
 
