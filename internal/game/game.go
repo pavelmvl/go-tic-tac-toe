@@ -2,30 +2,19 @@ package game
 
 import (
 	"fmt"
+	"go-tic-tac-toe/internal/common"
 )
-
-type IPlayer interface {
-	GetMark() rune
-}
-
-type IField interface {
-	AssignCell(col, row int, mark rune) error
-	IsCellWinner(col, row int) rune
-	IsFieldFull() bool
-	ToString() string
-	ToHtml(...string) string
-}
 
 type Game struct {
 	iter      int
 	playerIdx int
-	winner    *IPlayer
+	winner    *common.IPlayer
 	draw      bool
-	players   []IPlayer
-	field     IField
+	players   []common.IPlayer
+	field     common.IField
 }
 
-func NewGame(f IField, p ...IPlayer) Game {
+func NewGame(f common.IField, p ...common.IPlayer) Game {
 	g := Game{
 		iter:      0,
 		playerIdx: 0,
@@ -89,6 +78,6 @@ func (g Game) GetIter() int {
 	return g.iter
 }
 
-func (g Game) GetCurrentPlayer() IPlayer {
+func (g Game) GetCurrentPlayer() common.IPlayer {
 	return g.players[g.playerIdx]
 }

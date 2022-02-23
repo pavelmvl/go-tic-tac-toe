@@ -2,19 +2,14 @@ package httpGame
 
 import (
 	"fmt"
+	"go-tic-tac-toe/internal/common"
 	"net/http"
 	"strconv"
 	"strings"
 )
 
-type IGame interface {
-	GetWinnerString() (string, error)
-	NextMove(int, int) error
-	ToHtml(...string) string
-}
-
 type HttpGame struct {
-	game IGame
+	game common.IGame
 }
 
 func (h HttpGame) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -64,7 +59,7 @@ func (h HttpGame) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, h.game.ToHtml())
 }
 
-func NewHttpGame(g IGame) error {
+func NewHttpGame(g common.IGame) error {
 	handle := HttpGame{
 		game: g,
 	}

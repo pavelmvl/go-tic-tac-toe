@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"go-tic-tac-toe/internal/common"
 	"go-tic-tac-toe/internal/field"
 	"go-tic-tac-toe/internal/game"
 	"go-tic-tac-toe/internal/httpGame"
@@ -26,7 +27,7 @@ func main() {
 		fmt.Print("Enter your mark: ")
 		fmt.Scan(p)
 	}
-	players := make([]game.IPlayer, 0, 2)
+	players := make([]common.IPlayer, 0, 2)
 	players = append(players, player.New(*p))
 	if players[0].GetMark() == 'X' {
 		players = append(players, player.New("O"))
