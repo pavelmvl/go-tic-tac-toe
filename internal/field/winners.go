@@ -1,11 +1,13 @@
 package field
 
-const NoWinner rune = rune(0)
+import (
+	"go-tic-tac-toe/internal/common"
+)
 
 func (f Field) isColumnWinner(col, row int) rune {
 	winner, _ := f.GetCellValue(col, row)
 	if winner == rune(0) {
-		return NoWinner
+		return common.NoWinner
 	}
 	lineSize := 0
 	for v := 0; v < f.size; v++ {
@@ -14,17 +16,17 @@ func (f Field) isColumnWinner(col, row int) rune {
 		} else {
 			lineSize = 0
 		}
-		if lineSize >= f.size {
+		if lineSize >= f.winSeq {
 			return winner
 		}
 	}
-	return NoWinner
+	return common.NoWinner
 }
 
 func (f Field) isRowWinner(col, row int) rune {
 	winner, _ := f.GetCellValue(col, row)
 	if winner == rune(0) {
-		return NoWinner
+		return common.NoWinner
 	}
 	lineSize := 0
 	for v := 0; v < f.size; v++ {
@@ -33,17 +35,17 @@ func (f Field) isRowWinner(col, row int) rune {
 		} else {
 			lineSize = 0
 		}
-		if lineSize >= f.size {
+		if lineSize >= f.winSeq {
 			return winner
 		}
 	}
-	return NoWinner
+	return common.NoWinner
 }
 
 func (f Field) isDiagStreightWinner(col, row int) rune {
 	winner, _ := f.GetCellValue(col, row)
 	if winner == rune(0) {
-		return NoWinner
+		return common.NoWinner
 	}
 	lineSize := 0
 	sub := 0
@@ -60,19 +62,19 @@ func (f Field) isDiagStreightWinner(col, row int) rune {
 		} else {
 			lineSize = 0
 		}
-		if lineSize >= f.size {
+		if lineSize >= f.winSeq {
 			return winner
 		}
 		curCol++
 		curRow++
 	}
-	return NoWinner
+	return common.NoWinner
 }
 
 func (f Field) isDiagReverseWinner(col, row int) rune {
 	winner, _ := f.GetCellValue(col, row)
 	if winner == rune(0) {
-		return NoWinner
+		return common.NoWinner
 	}
 	lineSize := 0
 	sub := col
@@ -92,11 +94,11 @@ func (f Field) isDiagReverseWinner(col, row int) rune {
 		} else {
 			lineSize = 0
 		}
-		if lineSize >= f.size {
+		if lineSize >= f.winSeq {
 			return winner
 		}
 		curCol++
 		curRow--
 	}
-	return NoWinner
+	return common.NoWinner
 }

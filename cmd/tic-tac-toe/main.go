@@ -17,9 +17,10 @@ import (
 func main() {
 	// init
 	a := flag.Bool("a", false, "Ask config by cli or webUI")
-	s := flag.Int("s", 3, "Setup square field size, Default is 3")
-	p := flag.String("p", "X", "Setup player mark. Default is 'X'")
-	v := flag.String("v", "cli", "Setup using http variant of game, default is cli, valid values is 'h'(http) or 'c'(cli)")
+	s := flag.Int("s", 3, "Setup square field size")
+	w := flag.Int("w", 3, "Setup win sequence length, should be greater than 2 and less or equal field size")
+	p := flag.String("p", "X", "Setup player mark")
+	v := flag.String("v", "cli", "Setup using http variant of game, valid values is 'h'(http) or 'c'(cli)")
 	flag.Parse()
 	if *a {
 		fmt.Print("Enter your field size: ")
@@ -29,7 +30,7 @@ func main() {
 		fmt.Print("Enter game variant: ")
 		fmt.Scan(v)
 	}
-	instField, errField := field.New(*s)
+	instField, errField := field.New(*s, *w)
 	if errField != nil {
 		panic(errField)
 	}
@@ -44,7 +45,7 @@ func main() {
 	switch *v {
 	case "h", "http":
 		startBrowser("http://127.0.0.1:8080")
-		httpGame.NewHttpGame(&instGame)
+		httpGame.NewHttpGame(&instGame, field.NewIField, player.NewIPlayer)
 	default:
 		cliGame.PlayCliGame(&instGame, os.Stdin, os.Stdout, os.Stderr)
 	}

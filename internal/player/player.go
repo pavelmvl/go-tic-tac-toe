@@ -2,6 +2,7 @@ package player
 
 import (
 	"fmt"
+	"go-tic-tac-toe/internal/common"
 )
 
 type Player struct {
@@ -15,6 +16,10 @@ func (p Player) String() string {
 
 func (p Player) GetMark() rune {
 	return p.mark
+}
+
+func NewIPlayer(mark string) common.IPlayer {
+	return New(mark)
 }
 
 func New(mark string) Player {
