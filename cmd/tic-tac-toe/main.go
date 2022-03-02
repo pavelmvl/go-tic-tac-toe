@@ -18,12 +18,21 @@ import (
 func main() {
 	// init
 	cfg := config.NewConfigFromEnv()
-	flag.StringVar(&cfg.GameVariant, "v", "html", "Setup using http variant of game, valid values is 'h'(http) or 'c'(cli)")
+	flag.StringVar(&cfg.GameVariant, "v", "http", "Setup using http variant of game, valid values is 'h'(http) or 'c'(cli)")
 	flag.StringVar(&cfg.PlayersSides, "p", "XO", "Setup players marks and order")
 	flag.IntVar(&cfg.FieldSize, "s", 3, "Setup square field size")
 	flag.IntVar(&cfg.FieldWinSeq, "w", 3, "Setup win sequence length, should be greater than 2 and less or equal field size")
+	configJsonFileName := flag.String("c", "", "Path to file with config in json")
 	interactive := flag.Bool("i", false, "Ask reenter config from console")
 	flag.Parse()
+	if file, err := os.Open(*configJsonFileName); err == nil {
+		cfg.ReadJsonAndMerge(file)
+		file.Close()
+	} else {
+		if *configJsonFileName != "" {
+			fmt.Println("Skip file reading:", err)
+		}
+	}
 	if *interactive {
 		fmt.Print("Enter game variant: ")
 		fmt.Scan(&cfg.GameVariant)
@@ -44,7 +53,7 @@ func main() {
 	}
 	instGame := game.NewGame(instField, players...)
 	switch cfg.GameVariant {
-	case "h", "http":
+	case "h", "http", "html":
 		startBrowser("http://127.0.0.1:8080")
 		httpGame.NewHttpGame(&instGame, field.NewIField, player.NewIPlayer)
 	default:

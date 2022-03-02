@@ -9,19 +9,35 @@ import (
 var conf = []byte(`{
   "game_variant":"http",
   "players_sides":"OX",
-  "filed_size":3,
-  "field_winSeq":3
+  "field_size":3,
+  "field_winseq":3
 }`)
 
-func TestReadJson(t *testing.T) {
+var confMerge = []byte(`{
+  "game_variant":"http",
+  "players_sides":"OX",
+  "field_size":3,
+}`)
+
+func TestJsonMerge(t *testing.T) {
 	Buffer := bytes.NewBuffer(conf)
 	c := NewEmptyConfig()
-	c.ReadJson(Buffer)
+	c.FieldSize = 4
+	c.FieldWinSeq = 4
+	fmt.Println(c)
+	c.ReadJsonAndMerge(Buffer)
+	fmt.Println(c)
+}
+
+func TestReadJsonAndMerge(t *testing.T) {
+	Buffer := bytes.NewBuffer(conf)
+	c := NewEmptyConfig()
+	c.ReadJsonAndMerge(Buffer)
 	fmt.Println(c)
 }
 
 func TestReadEnvAndMerge(t *testing.T) {
 	c := NewEmptyConfig()
-	c.ReadEnv()
+	c.ReadEnvAndMerge()
 	fmt.Println(c)
 }
