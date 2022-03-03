@@ -1,3 +1,3 @@
-module go-tic-tac-toe/internal/player
+module player
 
 go 1.17
