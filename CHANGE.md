@@ -1,4 +1,18 @@
 
+# Hometask 09
+
+* Add advanced hometask
+  * add cmd/adv\_hometask\_09/main.go to work with
+    linkedList and doubleLinkedList
+  * add linkedList package
+  * add doubleLinkedList package
+
+* Add reading config from json file
+  * fix default value for flag "v" (GameVariant)
+  * add flag -c for setup path to config file
+  * add constructor NewConfigFromJsonFile for create
+    struct Config from package config from json file
+
 # Hometask 08
 
 improve and refactor game:
