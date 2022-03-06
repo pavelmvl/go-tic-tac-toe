@@ -67,18 +67,18 @@ func TestReadEnvAndMerge(t *testing.T) {
 	}
 }
 
-var conf = []byte(
-	`{"game_variant":"http","players_sides":"OX","field_size":3,"field_winseq":3}`,
-)
-var confMerge = []byte(
-	`{"game_variant":"http","players_sides":"OX","field_size":4}`,
-)
+var conf = `{
+	"game_variant":"http","players_sides":"OX","field_size":3,"field_winseq":3
+}`
+var confMerge = `{
+	"game_variant":"http","players_sides":"OX","field_size":4
+}`
 
 func TestJsonMerge(t *testing.T) {
 	var Buffer *bytes.Buffer
 	var c, cmp Config
 	// first: read full json config
-	Buffer = bytes.NewBuffer(conf)
+	Buffer = bytes.NewBufferString(conf)
 	c = NewEmptyConfig()
 	c.ReadJsonAndMerge(Buffer)
 	cmp = Config{
@@ -88,10 +88,10 @@ func TestJsonMerge(t *testing.T) {
 		FieldWinSeq:  3,
 	}
 	if c != cmp {
-		t.Fatal("full json config read FAIL")
+		t.Fatal("full json config read FAIL: ", c, cmp, Buffer)
 	}
 	// second: merge json config
-	Buffer = bytes.NewBuffer(confMerge)
+	Buffer = bytes.NewBufferString(confMerge)
 	c = NewEmptyConfig()
 	c.FieldWinSeq = 3
 	c.ReadJsonAndMerge(Buffer)
