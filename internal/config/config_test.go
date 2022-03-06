@@ -33,12 +33,11 @@ func TestReadEnvAndMerge(t *testing.T) {
 	var c, cmp Config
 	// first: full env read test
 	os.Clearenv()
-	c = NewEmptyConfig()
 	os.Setenv("TICTACTOE_GAME_VARIANT", "http")
 	os.Setenv("TICTACTOE_PLAYERS_SIDES", "XO")
 	os.Setenv("TICTACTOE_FIELD_SIZE", "3")
 	os.Setenv("TICTACTOE_FIELD_WINSEQ", "3")
-	c.ReadEnvAndMerge()
+	c = NewConfigFromEnv()
 	cmp = Config{
 		GameVariant:  "http",
 		PlayersSides: "XO",
@@ -103,5 +102,21 @@ func TestJsonMerge(t *testing.T) {
 	}
 	if c != cmp {
 		t.Fatal("merge json config read FAIL")
+	}
+}
+
+func TestNewConfigFromJsonFile(t *testing.T) {
+	c, err := NewConfigFromJsonFile("testdata/exampl_config.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	cmp := Config{
+		GameVariant:  "cli",
+		PlayersSides: "XO",
+		FieldSize:    5,
+		FieldWinSeq:  4,
+	}
+	if c != cmp {
+		t.Fatal("NewConfigFromJsonFile() return error", c, cmp)
 	}
 }

@@ -1,6 +1,6 @@
 {
 "game_variant":"cli",
 "players_sides":"XO",
-"field_size":3,
-"field_winseq":3
+"field_size":5,
+"field_winseq":4
 }
