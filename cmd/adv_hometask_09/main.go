@@ -18,7 +18,8 @@ func main() {
 	fmt.Println(ll)
 	ll.Reverse()
 	fmt.Println(ll)
-	fmt.Println("==============================\n")
+	fmt.Println("==============================")
+	fmt.Println()
 	//
 	// double linked list
 	//
