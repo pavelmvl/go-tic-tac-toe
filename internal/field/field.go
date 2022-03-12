@@ -39,23 +39,6 @@ func (f Field) GetWinSeq() int {
 	return f.winSeq
 }
 
-func (f Field) isCellValid(col, row int) error {
-	if col < 0 || col >= f.size {
-		return common.ErrCellColumn
-	}
-	if row < 0 || row >= f.size {
-		return common.ErrCellRow
-	}
-	return nil
-}
-
-func (f Field) isCellFree(col, row int) error {
-	if f.cells[col][row] != rune(0) {
-		return common.ErrCellBusy
-	}
-	return nil
-}
-
 func (f Field) AssignCell(col, row int, mark rune) error {
 	var err error
 	err = f.isCellValid(col, row)
@@ -79,31 +62,6 @@ func (f Field) GetCellValue(col, row int) (rune, error) {
 	return f.cells[col][row], nil
 }
 
-func (f Field) IsCellWinner(col, row int) rune {
-	return f.isCellWinner(col, row)
-}
-
-func (f Field) isCellWinner(col, row int) rune {
-	var win rune
-	win = f.isColumnWinner(col, row)
-	if win != common.NoWinner {
-		return win
-	}
-	win = f.isRowWinner(col, row)
-	if win != common.NoWinner {
-		return win
-	}
-	win = f.isDiagStreightWinner(col, row)
-	if win != common.NoWinner {
-		return win
-	}
-	win = f.isDiagReverseWinner(col, row)
-	if win != common.NoWinner {
-		return win
-	}
-	return common.NoWinner
-}
-
 func (f Field) IsFieldFull() bool {
 	for col := 0; col < f.size; col++ {
 		for row := 0; row < f.size; row++ {
@@ -113,25 +71,4 @@ func (f Field) IsFieldFull() bool {
 		}
 	}
 	return true
-}
-
-func (f Field) ToString() string {
-	buf := make([]byte, 0, f.size*(2*f.size+1)+1)
-	for row := 0; row < f.size; row++ {
-		buf = append(buf, []byte(" ")...)
-		for col := 0; col < f.size; col++ {
-			mark, _ := f.GetCellValue(col, row)
-			if mark == common.NoWinner {
-				mark = ' '
-			}
-			buf = append(buf, []byte(string(mark))...)
-			buf = append(buf, []byte(" ")...)
-		}
-		buf = append(buf, []byte("\n")...)
-	}
-	return string(buf)
-}
-
-func (f Field) Print() {
-	print(f.ToString())
 }
