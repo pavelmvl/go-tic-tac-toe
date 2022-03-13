@@ -21,5 +21,20 @@ jobs:
     - name: Test
       run: go test -v ./...
 
-    - name: Build
-      run: go build -v ./...
+    - name: Build windows amd64
+      run: GOOS=windows GOARCH=amd64 go build -v -o ./tic-tac-toe.win-amd64.exe ./cmd/tic-tac-toe/main.go
+    - name: Build windows i386
+      run: GOOS=windows GOARCH=386 go build -v -o ./tic-tac-toe.win-386.exe ./cmd/tic-tac-toe/main.go
+    - name: Build darwin amd64
+      run: GOOS=darwin GOARCH=amd64 go build -v -o ./tic-tac-toe.darwin-amd64 ./cmd/tic-tac-toe/main.go
+    - name: Build linux amd64
+      run: GOOS=linux GOARCH=amd64 go build -v -o ./tic-tac-toe.linux-amd64 ./cmd/tic-tac-toe/main.go
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: tic-tac-toe
+        path: |
+          ./tic-tac-toe.win-amd64.exe
+          ./tic-tac-toe.win-386.exe
+          ./tic-tac-toe.darwin-amd64
+          ./tic-tac-toe.linux-amd64
