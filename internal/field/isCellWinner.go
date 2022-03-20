@@ -4,6 +4,31 @@ import (
 	"go-tic-tac-toe/internal/common"
 )
 
+func (f Field) IsCellWinner(col, row int) rune {
+	return f.isCellWinner(col, row)
+}
+
+func (f Field) isCellWinner(col, row int) rune {
+	var win rune
+	win = f.isColumnWinner(col, row)
+	if win != common.NoWinner {
+		return win
+	}
+	win = f.isRowWinner(col, row)
+	if win != common.NoWinner {
+		return win
+	}
+	win = f.isDiagStreightWinner(col, row)
+	if win != common.NoWinner {
+		return win
+	}
+	win = f.isDiagReverseWinner(col, row)
+	if win != common.NoWinner {
+		return win
+	}
+	return common.NoWinner
+}
+
 func (f Field) isColumnWinner(col, row int) rune {
 	winner, _ := f.GetCellValue(col, row)
 	if winner == rune(0) {

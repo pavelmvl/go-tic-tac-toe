@@ -1,28 +1,29 @@
 package field
 
 import (
+	"go-tic-tac-toe/internal/common"
 	"testing"
 )
 
 func TestNew(t *testing.T) {
 	var e error
-	_, e = New(1)
+	_, e = New(1, 0)
 	if e == nil {
 		t.Fatal("field.New(1) should be fail")
 	}
-	_, e = New(-1)
+	_, e = New(-1, 0)
 	if e == nil {
 		t.Fatal("field.New(-1) should be fail")
 	}
-	_, e = New(0)
+	_, e = New(0, 0)
 	if e == nil {
 		t.Fatal("field.New(0) should be fail")
 	}
-	_, e = New(3)
+	_, e = New(3, 3)
 	if e != nil {
 		t.Fatal("field.New(3) should be OK, error:", e)
 	}
-	_, e = New(500)
+	_, e = New(500, 250)
 	if e != nil {
 		t.Fatal("field.New(500) should be OK, error:", e)
 	}
@@ -36,17 +37,17 @@ type cellData struct {
 }
 
 var cellDataTest = [...]cellData{
-	cellData{-1, -1, 'X', ErrCellColumn},
-	cellData{-1, 0, 'X', ErrCellColumn},
-	cellData{0, -1, 'X', ErrCellRow},
+	cellData{-1, -1, 'X', common.ErrCellColumn},
+	cellData{-1, 0, 'X', common.ErrCellColumn},
+	cellData{0, -1, 'X', common.ErrCellRow},
 	cellData{0, 0, 'X', nil},
-	cellData{0, 0, 'O', ErrCellBusy},
+	cellData{0, 0, 'O', common.ErrCellBusy},
 	cellData{1, 1, 0, nil},
-	cellData{99, 99, 'X', ErrCellColumn},
+	cellData{99, 99, 'X', common.ErrCellColumn},
 }
 
 func TestAssignCell(t *testing.T) {
-	f, e := New(3)
+	f, e := New(3, 3)
 	if e != nil {
 		t.Fatal("field.New(3) return error: ", e)
 	}

@@ -12,7 +12,7 @@ type Config struct {
 	GameVariant  string `json:"game_variant"`
 	PlayersSides string `json:"players_sides"`
 	FieldSize    int    `json:"field_size"`
-	FieldWinSeq  int    `json"field_winseq"`
+	FieldWinSeq  int    `json:"field_winseq"`
 }
 
 var envLoookup = map[string][]string{
