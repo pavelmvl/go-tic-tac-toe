@@ -46,7 +46,7 @@ func (f Field) isCellFree(col, row int) error {
 	return nil
 }
 
-func (f *Field) AssignCell(col, row int, mark rune) error {
+func (f Field) AssignCell(col, row int, mark rune) error {
 	var err error
 	err = f.isCellValid(col, row)
 	if err != nil {
@@ -122,36 +122,41 @@ func (f Field) ToString() string {
 	return string(buf)
 }
 
-func (f Field) ToHtml() string {
-	html := make([]byte, 0, 2048)
-	html = append(html, []byte(`<html>
+var htmlTemplate string = `<html>
 <head>
 	<title>Tic-tac-toe</title>
 	<style>
 .field { display:table; outline:2px solid black; border-collapse:collapse; }
 .row { display:table-row; }
-.cell { display:table-cell; outline:1px solid black; border-collapse:collapse; margin:0; padding:0; width:100px; height:100px; font-size:50px; text-align: center; vertical-align:middle; }
+.cell { display:table-cell; outline:1px solid black; border-collapse:collapse; margin:0; padding:0; width:%dpx; height:%dpx; font-size:50px; text-align: center; vertical-align:middle; }
 	</style>
 </head>
 <body>
-	<div class="field">
-`)...)
+	<div class="field">%s</div>
+	<div class="extra">%s</div>
+</body>
+</html>`
+
+func (f Field) ToHtml(extra ...string) string {
+	extraByte := make([]byte, 0, 512)
+	for _, v := range extra {
+		extraByte = append(extraByte, []byte(v)...)
+		extraByte = append(extraByte, []byte("<br/>")...)
+	}
+	table := make([]byte, 0, 512)
 	for row := 0; row < f.size; row++ {
-		html = append(html, []byte("<div class=\"row\">")...)
+		table = append(table, []byte("<div class=\"row\">")...)
 		for col := 0; col < f.size; col++ {
 			mark, _ := f.GetCellValue(col, row)
 			if mark == NoWinner {
 				mark = ' '
 			}
-			html = append(html, []byte(fmt.Sprintf("<div class=\"cell\">%c</div>", mark))...)
+			table = append(table, []byte(fmt.Sprintf("<div class=\"cell\" onclick=\"location.href='/%d/%d';\">%c</div>", col, row, mark))...)
 		}
-		html = append(html, []byte("</div>")...)
+		table = append(table, []byte("</div>")...)
 	}
-	html = append(html, []byte(`
-	</div>
-</body>
-</html>`)...)
-	return string(html)
+	// TODO width = 100, height = 100. Make it parametrized
+	return fmt.Sprintf(htmlTemplate, 100, 100, string(table), string(extraByte))
 }
 
 func (f Field) Print() {

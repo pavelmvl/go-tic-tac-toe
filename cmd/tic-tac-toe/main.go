@@ -4,7 +4,8 @@ import (
 	"flag"
 	"fmt"
 	"go-tic-tac-toe/internal/field"
-	"go-tic-tac-toe/internal/httpServer"
+	"go-tic-tac-toe/internal/game"
+	"go-tic-tac-toe/internal/httpGame"
 	"go-tic-tac-toe/internal/player"
 	"os"
 	"os/exec"
@@ -25,57 +26,43 @@ func main() {
 		fmt.Print("Enter your mark: ")
 		fmt.Scan(p)
 	}
-	players := make([]player.Player, 0, 2)
+	players := make([]game.IPlayer, 0, 2)
 	players = append(players, player.New(*p))
 	if players[0].GetMark() == 'X' {
 		players = append(players, player.New("O"))
 	} else {
 		players = append(players, player.New("X"))
 	}
+	instGame := game.NewGame(instField, players...)
 	if *http {
 		startBrowser("http://127.0.0.1:8080")
-		iplayers := make([]httpServer.IPlayer, 0, cap(players))
-		for _, v := range players {
-			iplayers = append(iplayers, v)
-		}
-		err := httpServer.NewHttpGame(instField, iplayers...)
+		err := httpGame.NewHttpGame(&instGame)
 		fmt.Println(err)
 		os.Exit(0)
 	}
 	// work
-	var col int
-	var row int
-	var iter int = 0
+	var col, row int
 	for {
-		for _, p := range players {
-			// Enter and validate cell coord
-			for {
-				fmt.Print("(", iter, ")(", string(p.GetMark()), ")Enter <column> <row>: ")
-				fmt.Scan(&col, &row)
-				// mark cell
-				err := instField.AssignCell(col, row, p.GetMark())
-				if err != nil {
-					fmt.Println(err)
-					fmt.Println("Try enter againg")
-					continue
-				}
-				break
+		// Enter and validate cell coord
+		for {
+			p := instGame.GetCurrentPlayer()
+			fmt.Print("(", instGame.GetIter(), ")(", string(p.GetMark()), ")Enter <column> <row>: ")
+			fmt.Scan(&col, &row)
+			// mark cell
+			err := instGame.NextMove(col, row)
+			if err != nil {
+				fmt.Println(err)
+				fmt.Println("Try enter againg")
+				continue
 			}
-			// print current field
-			instField.Print()
-			// check winners
-			winner := instField.IsCellWinner(col, row)
-			if winner != field.NoWinner {
-				fmt.Println(string(winner), "is won")
-				return
-			}
-			// check draw
-			if instField.IsFieldFull() == true {
-				fmt.Println("friendship is won")
-				return
-			}
+			break
 		}
-		iter++
+		fmt.Print(instGame.ToString())
+		winnerString, winnerErr := instGame.GetWinnerString()
+		if winnerErr == nil {
+			fmt.Println(winnerString)
+			return
+		}
 	}
 }
 
