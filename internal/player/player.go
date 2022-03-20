@@ -6,11 +6,15 @@ import (
 
 type Player struct {
 	Priority int
-	Mark     rune
+	mark     rune
 }
 
-func (this Player) String() string {
-	return fmt.Sprintf("'Player %d marking '%c''", this.Priority, this.Mark)
+func (p Player) String() string {
+	return fmt.Sprintf("'Player %d marking '%c''", p.Priority, p.mark)
+}
+
+func (p Player) GetMark() rune {
+	return p.mark
 }
 
 func New(mark string) Player {
@@ -18,10 +22,10 @@ func New(mark string) Player {
 	switch mark {
 	case "x", "X":
 		player.Priority = 0
-		player.Mark = 'X'
+		player.mark = 'X'
 	default:
 		player.Priority = 1
-		player.Mark = 'O'
+		player.mark = 'O'
 	}
 	return player
 }
