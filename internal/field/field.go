@@ -1,27 +1,25 @@
 package field
 
 import (
-	"fmt"
+	"go-tic-tac-toe/internal/common"
 )
 
 type Field struct {
-	size  int
-	cells [][]rune
+	size   int
+	winSeq int
+	cells  [][]rune
 }
 
-var (
-	ErrFieldSize  = fmt.Errorf("Incorrect 'size' value. 'size' should be greater than '2'")
-	ErrCellColumn = fmt.Errorf("Incorrect cell: column check failed")
-	ErrCellRow    = fmt.Errorf("Incorrect cell: row check failed")
-	ErrCellBusy   = fmt.Errorf("Cell is not free")
-)
-
-func New(size int) (Field, error) {
+func New(size int, winSeq int) (Field, error) {
 	f := Field{}
 	if size < 3 {
-		return f, ErrFieldSize
+		return f, common.ErrFieldSize
+	}
+	if winSeq < 3 || winSeq > size {
+		return f, common.ErrWinSeqSize
 	}
 	f.size = size
+	f.winSeq = winSeq
 	f.cells = make([][]rune, size)
 	for i := range f.cells {
 		f.cells[i] = make([]rune, size)
@@ -29,19 +27,31 @@ func New(size int) (Field, error) {
 	return f, nil
 }
 
+func NewIField(size, winSeq int) (common.IField, error) {
+	return New(size, winSeq)
+}
+
+func (f Field) GetSize() int {
+	return f.size
+}
+
+func (f Field) GetWinSeq() int {
+	return f.winSeq
+}
+
 func (f Field) isCellValid(col, row int) error {
 	if col < 0 || col >= f.size {
-		return ErrCellColumn
+		return common.ErrCellColumn
 	}
 	if row < 0 || row >= f.size {
-		return ErrCellRow
+		return common.ErrCellRow
 	}
 	return nil
 }
 
 func (f Field) isCellFree(col, row int) error {
 	if f.cells[col][row] != rune(0) {
-		return ErrCellBusy
+		return common.ErrCellBusy
 	}
 	return nil
 }
@@ -76,28 +86,28 @@ func (f Field) IsCellWinner(col, row int) rune {
 func (f Field) isCellWinner(col, row int) rune {
 	var win rune
 	win = f.isColumnWinner(col, row)
-	if win != NoWinner {
+	if win != common.NoWinner {
 		return win
 	}
 	win = f.isRowWinner(col, row)
-	if win != NoWinner {
+	if win != common.NoWinner {
 		return win
 	}
 	win = f.isDiagStreightWinner(col, row)
-	if win != NoWinner {
+	if win != common.NoWinner {
 		return win
 	}
 	win = f.isDiagReverseWinner(col, row)
-	if win != NoWinner {
+	if win != common.NoWinner {
 		return win
 	}
-	return NoWinner
+	return common.NoWinner
 }
 
 func (f Field) IsFieldFull() bool {
 	for col := 0; col < f.size; col++ {
 		for row := 0; row < f.size; row++ {
-			if winner, _ := f.GetCellValue(col, row); winner == NoWinner {
+			if winner, _ := f.GetCellValue(col, row); winner == common.NoWinner {
 				return false
 			}
 		}
@@ -111,7 +121,7 @@ func (f Field) ToString() string {
 		buf = append(buf, []byte(" ")...)
 		for col := 0; col < f.size; col++ {
 			mark, _ := f.GetCellValue(col, row)
-			if mark == NoWinner {
+			if mark == common.NoWinner {
 				mark = ' '
 			}
 			buf = append(buf, []byte(string(mark))...)
@@ -120,43 +130,6 @@ func (f Field) ToString() string {
 		buf = append(buf, []byte("\n")...)
 	}
 	return string(buf)
-}
-
-var htmlTemplate string = `<html>
-<head>
-	<title>Tic-tac-toe</title>
-	<style>
-.field { display:table; outline:2px solid black; border-collapse:collapse; }
-.row { display:table-row; }
-.cell { display:table-cell; outline:1px solid black; border-collapse:collapse; margin:0; padding:0; width:%dpx; height:%dpx; font-size:50px; text-align: center; vertical-align:middle; }
-	</style>
-</head>
-<body>
-	<div class="field">%s</div>
-	<div class="extra">%s</div>
-</body>
-</html>`
-
-func (f Field) ToHtml(extra ...string) string {
-	extraByte := make([]byte, 0, 512)
-	for _, v := range extra {
-		extraByte = append(extraByte, []byte(v)...)
-		extraByte = append(extraByte, []byte("<br/>")...)
-	}
-	table := make([]byte, 0, 512)
-	for row := 0; row < f.size; row++ {
-		table = append(table, []byte("<div class=\"row\">")...)
-		for col := 0; col < f.size; col++ {
-			mark, _ := f.GetCellValue(col, row)
-			if mark == NoWinner {
-				mark = ' '
-			}
-			table = append(table, []byte(fmt.Sprintf("<div class=\"cell\" onclick=\"location.href='/%d/%d';\">%c</div>", col, row, mark))...)
-		}
-		table = append(table, []byte("</div>")...)
-	}
-	// TODO width = 100, height = 100. Make it parametrized
-	return fmt.Sprintf(htmlTemplate, 100, 100, string(table), string(extraByte))
 }
 
 func (f Field) Print() {
