@@ -45,6 +45,17 @@ func NewConfigFromEnv() Config {
 	return cfg
 }
 
+func NewConfigFromJsonFile(filename string) (Config, error) {
+	cfg := NewEmptyConfig()
+	file, err := os.Open(filename)
+	if err != nil {
+		return cfg, err
+	}
+	defer file.Close()
+	cfg.ReadJsonAndMerge(file)
+	return cfg, nil
+}
+
 func (c *Config) ReadEnvAndMerge() {
 	if v, ok := lookup("game_variant"); ok {
 		c.GameVariant = v
@@ -68,7 +79,7 @@ func (c *Config) ReadEnvAndMerge() {
 	}
 }
 
-func (c *Config) ReadJson(r io.Reader) error {
+func (c *Config) ReadJsonAndMerge(r io.Reader) error {
 	d := json.NewDecoder(r)
 	return d.Decode(c)
 }

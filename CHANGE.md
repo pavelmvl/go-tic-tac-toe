@@ -1,4 +1,14 @@
 
+# Hometask 08
+
+improve and refactor game:
+* add file CHANGE.md for see all list of changes
+* refactor scripts/test.mk
+* improve - add package config:
+  * refactor flags
+  * refactor creating []player.Player and field.Field
+  * make http variant of game default
+
 # Hometask 07
 
 improve and refactor game:
