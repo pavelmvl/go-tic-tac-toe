@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"go-tic-tac-toe/internal/cliGame"
 	"go-tic-tac-toe/internal/common"
+	"go-tic-tac-toe/internal/config"
 	"go-tic-tac-toe/internal/field"
 	"go-tic-tac-toe/internal/game"
 	"go-tic-tac-toe/internal/httpGame"
@@ -16,33 +17,33 @@ import (
 
 func main() {
 	// init
-	a := flag.Bool("a", false, "Ask config by cli or webUI")
-	s := flag.Int("s", 3, "Setup square field size")
-	w := flag.Int("w", 3, "Setup win sequence length, should be greater than 2 and less or equal field size")
-	p := flag.String("p", "X", "Setup player mark")
-	v := flag.String("v", "cli", "Setup using http variant of game, valid values is 'h'(http) or 'c'(cli)")
+	cfg := config.NewConfigFromEnv()
+	flag.StringVar(&cfg.GameVariant, "v", "html", "Setup using http variant of game, valid values is 'h'(http) or 'c'(cli)")
+	flag.StringVar(&cfg.PlayersSides, "p", "XO", "Setup players marks and order")
+	flag.IntVar(&cfg.FieldSize, "s", 3, "Setup square field size")
+	flag.IntVar(&cfg.FieldWinSeq, "w", 3, "Setup win sequence length, should be greater than 2 and less or equal field size")
+	interactive := flag.Bool("i", false, "Ask reenter config from console")
 	flag.Parse()
-	if *a {
-		fmt.Print("Enter your field size: ")
-		fmt.Scan(s)
-		fmt.Print("Enter your mark: ")
-		fmt.Scan(p)
+	if *interactive {
 		fmt.Print("Enter game variant: ")
-		fmt.Scan(v)
+		fmt.Scan(&cfg.GameVariant)
+		fmt.Print("Enter your field size: ")
+		fmt.Scan(&cfg.FieldSize)
+		fmt.Print("Enter players marks and order: ")
+		fmt.Scan(&cfg.PlayersSides)
 	}
-	instField, errField := field.New(*s, *w)
+	instField, errField := field.New(cfg.FieldSize, cfg.FieldWinSeq)
 	if errField != nil {
 		panic(errField)
 	}
-	players := make([]common.IPlayer, 0, 2)
-	players = append(players, player.New(*p))
-	if players[0].GetMark() == 'X' {
-		players = append(players, player.New("O"))
-	} else {
-		players = append(players, player.New("X"))
+	// TODO trim cfg.PlayersSides
+	sides := []rune(cfg.PlayersSides)
+	players := make([]common.IPlayer, len(sides))
+	for i := range players {
+		players[i] = player.New(string(sides[i]))
 	}
 	instGame := game.NewGame(instField, players...)
-	switch *v {
+	switch cfg.GameVariant {
 	case "h", "http":
 		startBrowser("http://127.0.0.1:8080")
 		httpGame.NewHttpGame(&instGame, field.NewIField, player.NewIPlayer)
