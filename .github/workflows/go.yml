@@ -32,4 +32,9 @@ jobs:
 
     - uses: actions/upload-artifact@v3
       with:
-        name: tic-tac-toe.*
+        name: tic-tac-toe
+        path: |
+          ./tic-tac-toe.win-amd64.exe
+          ./tic-tac-toe.win-386.exe
+          ./tic-tac-toe.darwin-amd64
+          ./tic-tac-toe.linux-amd64
